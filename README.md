@@ -64,7 +64,7 @@ You can modify the values of the input parameters as per your requirements. Alte
 
 
 ## Test
-You can easily test the trained model either with default settings or by specifying your own paths for datasets and checkpoints.
+You can easily test the trained model either with default settings or by specifying your own paths for datasets and checkpoints.<br/><br/>
 Simple (Default)
 ```
 !python test.py
