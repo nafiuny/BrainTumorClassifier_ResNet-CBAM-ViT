@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from model import create_model  # یا هر مدلی که می‌خواهی استفاده کنی
 from preprocess_dataset import get_dataloaders
 
-# -------- دریافت ورودی از خط فرمان -------- #
+# Parameters
 parser = argparse.ArgumentParser(description="Train a brain tumor classifier model.")
 parser.add_argument('--x_train', type=str, required=True, help="Path to X_train.npy")
 parser.add_argument('--y_train', type=str, required=True, help="Path to y_train.npy")
@@ -21,21 +21,19 @@ parser.add_argument('--checkpoint_dir', type=str, default='checkpoints', help="D
 
 args = parser.parse_args()
 
-# -------- تنظیمات پایه -------- #
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 os.makedirs(args.checkpoint_dir, exist_ok=True)
 
-# -------- بارگذاری داده‌ها -------- #
+# Load data
 train_loader, val_loader = get_dataloaders(
     args.x_train, args.y_train, args.x_val, args.y_val, batch_size=args.batch_size
 )
 
-# -------- تعریف مدل -------- #
 model = create_model(num_classes=4).to(device)
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
-# -------- بررسی checkpoint قبلی -------- #
+# Load checkpoint
 start_epoch = 0
 checkpoint_files = [f for f in os.listdir(args.checkpoint_dir) if f.endswith('.pth')]
 if checkpoint_files:
@@ -46,7 +44,7 @@ if checkpoint_files:
     start_epoch = checkpoint['epoch'] + 1
     print(f"🔄 Checkpoint loaded: {latest_ckpt}")
 
-# -------- آموزش -------- #
+# Train
 for epoch in range(start_epoch, args.epochs):
     model.train()
     total, correct, running_loss = 0, 0, 0
@@ -67,7 +65,7 @@ for epoch in range(start_epoch, args.epochs):
     train_acc = correct / total
     train_loss = running_loss / len(train_loader)
 
-    # -------- ارزیابی -------- #
+   
     model.eval()
     val_correct, val_total, val_loss_total = 0, 0, 0
     with torch.no_grad():
@@ -85,7 +83,6 @@ for epoch in range(start_epoch, args.epochs):
 
     print(f"Epoch [{epoch+1}/{args.epochs}] | Train Loss: {train_loss:.4f}, Acc: {train_acc:.4f} | Val Loss: {val_loss:.4f}, Acc: {val_acc:.4f}")
 
-    # -------- ذخیره مدل هر 10 epoch -------- #
     if (epoch + 1) % 10 == 0:
         ckpt_path = os.path.join(args.checkpoint_dir, f"model_epoch_{epoch+1}.pth")
         torch.save({
@@ -95,7 +92,6 @@ for epoch in range(start_epoch, args.epochs):
         }, ckpt_path)
         print(f"💾 Saved checkpoint: {ckpt_path}")
 
-# -------- ارزیابی نهایی -------- #
 model.eval()
 y_true, y_pred = [], []
 with torch.no_grad():
