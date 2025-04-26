@@ -64,11 +64,23 @@ You can modify the values of the input parameters as per your requirements. Alte
 
 
 ## Test
-In the following command, enter the name of the checkpoint specified in the train step and run it.
+You can easily test the trained model either with default settings or by specifying your own paths for datasets and checkpoints.
+Simple (Default)
 ```
 !python test.py
+```
+Custom Test
+```
 !python test.py \
     --x_test data_preprocessed/X_test_final.npy \
     --y_test data_preprocessed/y_test_final.npy \
     --checkpoint checkpoints/model_epoch_70.pth 
 ```
+
+## Single Image Prediction
+To quickly predict the tumor class of a single MRI image, simply run the following command.
+```
+python predict.py --image_path /path/to/your/image.jpg
+```
+
+!python predict.py --image_path /content/drive/MyDrive/brain-tumor-mri-dataset/Testing/glioma/Te-glTr_0001.jpg
