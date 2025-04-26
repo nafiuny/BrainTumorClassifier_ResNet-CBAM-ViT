@@ -14,7 +14,7 @@ parser.add_argument('--x_train', type=str, required=True, help="Path to X_train.
 parser.add_argument('--y_train', type=str, required=True, help="Path to y_train.npy")
 parser.add_argument('--x_val', type=str, required=True, help="Path to X_val.npy")
 parser.add_argument('--y_val', type=str, required=True, help="Path to y_val.npy")
-parser.add_argument('--epochs', type=int, default=80, help="Number of training epochs")
+parser.add_argument('--epochs', type=int, default=150, help="Number of training epochs")
 parser.add_argument('--batch_size', type=int, default=32, help="Batch size for training")
 parser.add_argument('--lr', type=float, default=1e-4, help="Learning rate")
 parser.add_argument('--checkpoint_dir', type=str, default='checkpoints', help="Directory to save model checkpoints")
@@ -42,7 +42,18 @@ if checkpoint_files:
     model.load_state_dict(checkpoint['model_state'])
     optimizer.load_state_dict(checkpoint['optimizer_state'])
     start_epoch = checkpoint['epoch'] + 1
+    train_losses = checkpoint.get('train_losses', [])
+    val_losses = checkpoint.get('val_losses', [])
+    train_accuracies = checkpoint.get('train_accuracies', [])
+    val_accuracies = checkpoint.get('val_accuracies', [])
     print(f"🔄 Checkpoint loaded: {latest_ckpt}")
+
+# قبل از حلقه آموزش
+train_losses, val_losses = [], []
+train_accuracies, val_accuracies = [], []
+
+# اگر چک‌پوینتی موجود بود و اطلاعات بیشتر ذخیره شده بود:
+
 
 # Train
 for epoch in range(start_epoch, args.epochs):
@@ -88,7 +99,11 @@ for epoch in range(start_epoch, args.epochs):
         torch.save({
             'epoch': epoch,
             'model_state': model.state_dict(),
-            'optimizer_state': optimizer.state_dict()
+            'optimizer_state': optimizer.state_dict(),
+            'train_losses': train_losses,
+            'val_losses': val_losses,
+            'train_accuracies': train_accuracies,
+            'val_accuracies': val_accuracies
         }, ckpt_path)
         print(f"💾 Saved checkpoint: {ckpt_path}")
 
