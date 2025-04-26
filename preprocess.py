@@ -20,6 +20,8 @@ mode = "train" if args.train_dir else "test"
 img_size = (224, 224)
 batch_size = args.batch_size
 save_dir = args.output_dir
+os.makedirs(save_dir, exist_ok=True)
+
 
 # Wavelet transform
 def wavelet_transform(image):
