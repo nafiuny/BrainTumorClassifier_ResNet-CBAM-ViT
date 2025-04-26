@@ -29,6 +29,9 @@ Clone the repository.
 ```
 %cd BrainTumorClassifier_ResNet-CBAM-ViT
 ```
+```
+!pip install -r requirements.txt
+```
 ## Download dataset
 
 ```
