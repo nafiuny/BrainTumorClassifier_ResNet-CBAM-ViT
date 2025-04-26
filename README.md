@@ -78,6 +78,6 @@ or
 ## Single Image Prediction
 To quickly predict the tumor class of a single MRI image, simply run the following command.
 ```
-python predict.py --image_path /path/to/your/image.jpg
+!python predict.py --image_path /path/to/your/image.jpg
 ```
 
