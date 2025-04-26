@@ -5,7 +5,7 @@ import cv2
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import pywt
 
-# پارامترها از خط فرمان
+# Parameters
 parser = argparse.ArgumentParser(description="Preprocess brain tumor MRI images.")
 parser.add_argument('--train_dir', type=str, help="Path to training data")
 parser.add_argument('--test_dir', type=str, help="Path to testing data")
@@ -13,7 +13,7 @@ parser.add_argument('--output_dir', type=str, required=True, help="Directory to 
 parser.add_argument('--batch_size', type=int, default=200, help="Batch size for saving intermediate files")
 args = parser.parse_args()
 
-# انتخاب مسیر داده‌ها
+# data path
 data_dir = args.train_dir if args.train_dir else args.test_dir
 mode = "train" if args.train_dir else "test"
 
@@ -21,14 +21,14 @@ img_size = (224, 224)
 batch_size = args.batch_size
 save_dir = args.output_dir
 
-# تبدیل موجک
+# Wavelet transform
 def wavelet_transform(image):
     coeffs2 = pywt.dwt2(image, 'haar')
     LL, (LH, HL, HH) = coeffs2
     LL_resized = cv2.resize(LL, img_size)
     return LL_resized
 
-# اعمال موجک روی تمام تصاویر
+# Apply wavelet to all images
 def process_with_wavelet(images):
     processed_images = []
     for img in images:
@@ -37,7 +37,7 @@ def process_with_wavelet(images):
         processed_images.append(img_wavelet_rgb)
     return np.array(processed_images)
 
-# شروع پیش‌پردازش
+# Start preprocessing
 X_data, y_data = [], []
 batch_count = 0
 classes = os.listdir(data_dir)
@@ -70,7 +70,7 @@ if len(X_data) > 0:
     np.save(f"{save_dir}/y_{mode}_batch_{batch_count}.npy", np.array(y_data))
     print(f"Final batch {batch_count} saved.")
 
-# ادغام دسته‌ها
+# Merge batches
 X_batches, y_batches = [], []
 for i in range(batch_count + 1):
     X = np.load(f"{save_dir}/X_{mode}_batch_{i}.npy")
