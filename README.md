@@ -81,4 +81,3 @@ To quickly predict the tumor class of a single MRI image, simply run the followi
 python predict.py --image_path /path/to/your/image.jpg
 ```
 
-!python predict.py --image_path /content/drive/MyDrive/brain-tumor-mri-dataset/Testing/glioma/Te-glTr_0001.jpg
