@@ -59,17 +59,15 @@ You can modify the values of the input parameters as per your requirements. Alte
     --y_train data_preprocessed/y_train.npy \
     --x_val data_preprocessed/X_val.npy \
     --y_val data_preprocessed/y_val.npy 
-
 ```
 
 
 ## Test
 You can easily test the trained model either with default settings or by specifying your own paths for datasets and checkpoints.<br/><br/>
-Simple (Default)
 ```
 !python test.py
 ```
-Custom Test
+or
 ```
 !python test.py \
     --x_test data_preprocessed/X_test_final.npy \
